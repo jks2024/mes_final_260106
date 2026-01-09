@@ -36,6 +36,17 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-security-test'
 	testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	// Spring Security: 인증 및 인가 프레임워크
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+
+	// JWT API: JWT 인터페이스 및 관련 클래스
+	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
+
+	// JWT Implementation: JWT 실제 구현체 (런타임 시 필요)
+	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
+
+	// JWT Jackson: JSON 파싱을 위한 Jackson 지원 (런타임 시 필요)
+	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
 }
 
 tasks.named('test') {
