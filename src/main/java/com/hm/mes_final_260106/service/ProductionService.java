@@ -1,14 +1,9 @@
 package com.hm.mes_final_260106.service;
 
-import com.hm.mes_final_260106.entity.Bom;
-import com.hm.mes_final_260106.entity.Material;
-import com.hm.mes_final_260106.entity.ProductionLog;
-import com.hm.mes_final_260106.entity.WorkOrder;
+import com.hm.mes_final_260106.entity.*;
 import com.hm.mes_final_260106.exception.CustomException;
-import com.hm.mes_final_260106.repository.BomRepository;
-import com.hm.mes_final_260106.repository.MaterialRepository;
-import com.hm.mes_final_260106.repository.ProductionLogRepository;
-import com.hm.mes_final_260106.repository.WorkOrderRepository;
+import com.hm.mes_final_260106.repository.*;
+import com.hm.mes_final_260106.security.SecurityUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +21,7 @@ public class ProductionService {
     private final MaterialRepository matRepo;
     private final WorkOrderRepository orderRepo;
     private final BomRepository bomRepo;
+    private final MemberRepository memberRepository;
 
     // 자재 입고
     @Transactional  // 원자성 부여
@@ -81,7 +77,16 @@ public class ProductionService {
     // 생산 실적 보고 (MES의 핵심: 실적 기록 + 자재 차감 + 수량증가) : 설비 -> Backend
     @Transactional
     public void reportProduction(Long orderId, String machineId, String result, String defectCode) {
-        // 1. 지시 정보 확인
+        // 1. SecurityContext에서 현재 로그인한 작업자 정보 확보 (매개변수 email 삭제)
+        Member operator = null;
+        try {
+            // 1. SecurityContext에서 현재 로그인한 작업자 ID 추출
+            Long currentMemberId = SecurityUtil.getCurrentMemberId();
+            operator = memberRepository.findById(currentMemberId).orElseThrow();
+        } catch (Exception e) {
+            log.warn("작업자 정보를 찾을 수 없어 기본 사용자로 처리합니다.");
+        }
+
         WorkOrder order = orderRepo.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("작업 지시를 찾을 수 없습니다 ID: " + orderId));
 
