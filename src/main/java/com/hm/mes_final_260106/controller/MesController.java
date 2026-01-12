@@ -39,6 +39,7 @@ public class MesController {
     // 작업 지시 생성 API : 계획 입력(React) -> DB에 레코드 추가 -> 반환(DTO) -> 대시보드에 현재상태가 WAIT로 표시 되면서 작없이 등록 됨
     @PostMapping("/order")
     public ResponseEntity<WorkOrderResDto> createOrder(@RequestBody WorkOrderReqDto dto) {
+        log.info("작업 지시 생성 : {}", dto);
         WorkOrder order = productionService.createWorkOrder(dto.getProductCode(), dto.getTargetQty());
         return ResponseEntity.ok(WorkOrderResDto.fromEntity(order));
     }
@@ -52,6 +53,7 @@ public class MesController {
     // Machine : 설비 작업 할당, 설비에서 폴링 방식으로 주기적인 체크
     @GetMapping("machine/poll")
     public ResponseEntity<WorkOrderResDto> pollWork(@RequestParam String machineId) {
+        log.info("설비에서 작업 지시 폴링 요청 : {}", machineId);
         WorkOrder work = productionService.assignWorkToMachine(machineId);
         return (work != null) ? ResponseEntity.ok(WorkOrderResDto.fromEntity(work)) : ResponseEntity.noContent().build();
     }
