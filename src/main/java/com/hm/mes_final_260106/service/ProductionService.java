@@ -76,7 +76,7 @@ public class ProductionService {
 
     // 생산 실적 보고 (MES의 핵심: 실적 기록 + 자재 차감 + 수량증가) : 설비 -> Backend
     @Transactional
-    public void reportProduction(Long orderId, String machineId, String result, String defectCode) {
+    public void reportProduction(Long orderId, String machineId, String result, String defectCode, String serialNo) {
         // 1. SecurityContext에서 현재 로그인한 작업자 정보 확보 (매개변수 email 삭제)
         Member operator = null;
         try {
@@ -90,12 +90,12 @@ public class ProductionService {
         WorkOrder order = orderRepo.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("작업 지시를 찾을 수 없습니다 ID: " + orderId));
 
+
         if ("COMPLETED".equals(order.getStatus())) return;
 
         // 2. 생산 이력(ProductionLog) 저장 : 5M1E 데이터 수집
-        String serialNo = generateSerial(order.getProductCode());
         logRepo.save(ProductionLog.builder()
-                .workOrderNo("WO-" + order.getId())
+                .workOrder(order)
                 .productCode(order.getProductCode())
                 .machineId(machineId)
                 .serialNo(serialNo)

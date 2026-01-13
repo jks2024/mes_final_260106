@@ -10,4 +10,5 @@ public class ProductionReportDto {
     private String machineId;  // 설비 ID
     private String result;  // OK or NG
     private String defectCode;  // 불량 코드
+    private String serialNo;
 }
