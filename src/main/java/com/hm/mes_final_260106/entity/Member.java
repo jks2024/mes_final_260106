@@ -25,6 +25,10 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private Authority authority;
 
+    // 영속성 전이, 고아객체 제거
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private RefreshToken refreshToken;
+
     @Builder
     public Member(String email, String password, String name, Authority authority) {
         this.email = email;
