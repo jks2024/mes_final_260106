@@ -40,7 +40,7 @@ public class AuthService {
     }
 
     // 로그인
-    @Transactional (readOnly = true)
+    @Transactional
     public TokenDto login(LoginReqDto dto) {
         UsernamePasswordAuthenticationToken authenticationToken = dto.toAuthenticationToken();
         Authentication authentication = managerBuilder.getObject().authenticate(authenticationToken);
