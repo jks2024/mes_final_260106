@@ -36,7 +36,7 @@ public class AuthController {
 
     // 토큰 재발급 : 프론트엔드와 C# 수집기에서 토큰이 만료되었을 때 호출합니다.
     @PostMapping("/refresh")
-    public ResponseEntity<TokenDto> refresh(TokenDto tokenRequestDto) {
+    public ResponseEntity<TokenDto> refresh(@RequestBody TokenDto tokenRequestDto) {
         log.info("refresh tokenRequestDto {}", tokenRequestDto);
         return ResponseEntity.ok(authService.refresh(tokenRequestDto));
     }
