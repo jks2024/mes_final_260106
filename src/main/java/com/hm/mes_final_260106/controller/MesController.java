@@ -1,9 +1,6 @@
 package com.hm.mes_final_260106.controller;
 
-import com.hm.mes_final_260106.dto.MaterialInboundDto;
-import com.hm.mes_final_260106.dto.ProductionReportDto;
-import com.hm.mes_final_260106.dto.WorkOrderReqDto;
-import com.hm.mes_final_260106.dto.WorkOrderResDto;
+import com.hm.mes_final_260106.dto.*;
 import com.hm.mes_final_260106.entity.Material;
 import com.hm.mes_final_260106.entity.WorkOrder;
 import com.hm.mes_final_260106.service.ProductionService;
@@ -64,5 +61,10 @@ public class MesController {
         productionService.reportProduction(dto.getOrderId(),
                 dto.getMachineId(), dto.getResult(), dto.getDefectCode(), dto.getSerialNo());
         return ResponseEntity.ok("ACK");
+    }
+
+    @GetMapping("/production/recent-logs")
+    public ResponseEntity<List<RecentLogDto>> getRecentLogs() {
+        return ResponseEntity.ok(productionService.getRecentLogs());
     }
 }

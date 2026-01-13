@@ -18,6 +18,10 @@ public class ProductionLog {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private WorkOrder workOrder;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Member operator;  // JWT 토큰 정보를 통한 Man(사람) 매핑
+
     private String productCode;  // 제품 코드, 제품 테이블 생성된 객체를 ManyToOne 연결하는게 더 좋은 방식
     private String machineId;    // 설비 ID
 

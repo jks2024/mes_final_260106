@@ -1,5 +1,6 @@
 package com.hm.mes_final_260106.service;
 
+import com.hm.mes_final_260106.dto.RecentLogDto;
 import com.hm.mes_final_260106.entity.*;
 import com.hm.mes_final_260106.exception.CustomException;
 import com.hm.mes_final_260106.repository.*;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -161,6 +163,20 @@ public class ProductionService {
             }
         }
         return true;
+    }
+
+    // 최근 생산된 순으로 상위 15건 조회
+    public List<RecentLogDto> getRecentLogs() {
+        return logRepo.findTop15ByOrderByIdDesc().stream()
+                .map(log -> new RecentLogDto(
+                        log.getId(),
+                        log.getSerialNo(),
+                        log.getOperator() != null ? log.getOperator().getName() : "시스템",
+                        log.getResult(),
+                        log.getMachineId(),
+                        log.getProductAt()
+                ))
+                .collect(Collectors.toList());
     }
 
 }
